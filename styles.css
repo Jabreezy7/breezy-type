@@ -120,11 +120,15 @@ div.word {
     width: 2px;
     height: 1.6rem;
     background-color: var(--accentColor);
-    position: absolute;
-    top: 20%;
-    left: 1%;
-    transform: translate(-50%, -50%);
+    /* position: fixed;
+    top: 27%;
+    left: 10%;
+    transform: translate(-50%, -50%); */
+    position: fixed;
+    top: 193px;
+    left: 70px;
     animation: blink 1s infinite;
+    
 }
 
 #game:focus #cursor {

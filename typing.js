@@ -84,6 +84,13 @@ document.getElementById("game").addEventListener("keydown", ev => {
         addClass(currentWord.nextSibling.firstChild, "current");
     }
 
+    //Move cursor
+    const nextLetter = document.querySelector(".letter.current");
+    const nextWord = document.querySelector(".word.current");
+    const cursor = document.getElementById("cursor");
+    cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 'px';
+    cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left': 'right'] + 'px';
+
 })
 
 newGame();
