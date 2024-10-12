@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-:root{
+
+:root {
     --bgColor: #333;
     --textPrimaryColor: #fff;
     --textSecondaryColor: #666;
@@ -7,19 +8,19 @@
 }
 
 
-body{
+body {
     font-family: "Roboto", sans-serif;
     background-color: var(--bgColor);
     color: var(--textPrimaryColor);
     font-size: 1.4rem;
 }
 
-main{
+main {
     width: 600px;
     margin: 50px auto;
 }
 
-h1{
+h1 {
     color: var(--accentColor);
 }
 
@@ -34,11 +35,11 @@ h1 svg {
     margin: 20px 6px 30px;
 }
 
-#buttons{
+#buttons {
     text-align: right;
 }
 
-#info{
+#info {
     color: var(--accentColor);
 }
 
@@ -51,22 +52,27 @@ button {
     cursor: pointer;
 }
 
-div#game{
+div#game {
     line-height: 35px;
     height: 105px;
     overflow: hidden;
     position: relative;
 }
 
-#words{
+div #game:focus {
+    outline: 0;
+}
+
+#words {
     filter: blur(5px);
     color: var(--textSecondaryColor);
 }
-#game:focus #words{
+
+#game:focus #words {
     filter: blur(0);
 }
 
-#focus-error{
+#focus-error {
     position: absolute;
     inset: 0;
     text-align: center;
@@ -74,45 +80,53 @@ div#game{
     font-family: 'Roboto Mono', monospace;
 }
 
-#game:focus #focus-error{
+#game:focus #focus-error {
     display: none;
 }
 
 
-div.word{
+div.word {
     display: inline-block;
     font-family: 'Roboto Mono', monospace;
     margin: 0 5px;
 
 }
 
-.letter.correct{
+.letter.correct {
     color: #fff;
 }
 
-.letter.incorrect{
+.letter.incorrect {
     color: #f55;
 }
 
 /* Cursor Blinking Animation */
 @keyframes blink {
-    0%{
+    0% {
         opacity: 1;
     }
-    50%{
+
+    50% {
         opacity: 0;
     }
-    100%{
+
+    100% {
         opacity: 1;
     }
 }
-#cursor{
+
+#cursor {
+    display: none;
     width: 2px;
     height: 1.6rem;
     background-color: var(--accentColor);
-    position: absolute; 
-    top: 20%; 
-    left: 1%; 
-    transform: translate(-50%, -50%); 
+    position: absolute;
+    top: 20%;
+    left: 1%;
+    transform: translate(-50%, -50%);
     animation: blink 1s infinite;
+}
+
+#game:focus #cursor {
+    display: block;
 }

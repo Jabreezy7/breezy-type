@@ -35,12 +35,55 @@ function newGame() {
 }
 
 
-document.getElementById("game").addEventListener("keyup", ev => {
+document.getElementById("game").addEventListener("keydown", ev => {
     const key = ev.key;
     const currentLetter = document.querySelector(".letter.current");
-    const expected = currentLetter.innerHTML;
+    const currentWord = document.querySelector(".word.current");
+    // If there is no current letter then we know that we are on a space
+    const expected = currentLetter?.innerHTML || " ";
+    
+    // Checking if key is a letter and not backspace or space key
+    const isLetter = key.length === 1 && key !== " ";
+
+    const isSpace = key === " ";
 
     console.log({key, expected});
+
+    if(isLetter){
+        if(currentLetter){
+            addClass(currentLetter, key === expected ? "correct": "incorrect");
+            removeClass(currentLetter, "current");
+
+            // Move current letter if we are not at the end of the word and not at a space
+            if(currentLetter.nextSibling){
+                addClass(currentLetter.nextSibling, "current");
+            }
+        }
+
+        else{
+            const incorrectLetter = document.createElement("span");
+            incorrectLetter.innerHTML = key;
+            incorrectLetter.className = "letter incorrect extra";
+            currentWord.appendChild(incorrectLetter);
+        }
+    }
+
+    if(isSpace){
+        if(expected !== " "){
+            const lettersToInvalidate = [...document.querySelectorAll(".word.current .letter:not(.correct)")];
+            lettersToInvalidate.forEach(letter =>{
+                addClass(letter, "incorrect");
+            });
+        }
+        removeClass(currentWord, "current");
+        addClass(currentWord.nextSibling, "current");
+        if(currentLetter){
+            removeClass(currentLetter, "current");
+        }
+
+        addClass(currentWord.nextSibling.firstChild, "current");
+    }
+
 })
 
 newGame();
