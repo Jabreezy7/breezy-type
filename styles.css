@@ -85,3 +85,34 @@ div.word{
     margin: 0 5px;
 
 }
+
+.letter.correct{
+    color: #fff;
+}
+
+.letter.incorrect{
+    color: #f55;
+}
+
+/* Cursor Blinking Animation */
+@keyframes blink {
+    0%{
+        opacity: 1;
+    }
+    50%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+#cursor{
+    width: 2px;
+    height: 1.6rem;
+    background-color: var(--accentColor);
+    position: absolute; 
+    top: 20%; 
+    left: 1%; 
+    transform: translate(-50%, -50%); 
+    animation: blink 1s infinite;
+}
