@@ -5,7 +5,7 @@ window.addEventListener("load", function () {
 class TypingGame {
     constructor() {
         this.words = [];
-        this.gameTime = 3 * 1000;
+        this.gameTime = 15 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
@@ -159,25 +159,30 @@ class TypingGame {
         }, 1000);
     }
 
-    // Method to end the game and display WPM
+    // Method to end the game and display game info
     gameOver() {
         clearInterval(this.timer);
         this.addClass(document.getElementById("game"), "over");
         const stats = this.getWPMandAccuracy();
-        document.getElementById("info").innerHTML = `WPM: ${stats.wpm} Accuracy: ${stats.accuracy}%`;
+        document.getElementById("info").innerHTML = `WPM: ${stats.wpm} &nbsp&nbsp&nbsp Accuracy: ${stats.accuracy}%`;
         this.removeClass(document.querySelector(".word"), "current");
         this.removeClass(document.querySelector(".letter"), "current");
         const cursor = document.getElementById("cursor");
         cursor.style.animation = "none";
     }
 
-    // Method to handle user typing input
+    // Method to handle user keyboard input
     handleKeydown(ev) {
         const key = ev.key;
         const currentLetter = document.querySelector(".letter.current");
         const currentWord = document.querySelector(".word.current");
-        const expected = currentLetter?.innerHTML || " ";
+
+        // If currentLetter does not exist that means we know we are on a space
+        const expected = currentLetter?.innerHTML || " "; 
+
+        // If the length of the key is 1 and the key is not a space then we know the user inputted a letter
         const isLetter = key.length === 1 && key !== " ";
+
         const isSpace = key === " ";
         const isBackSpace = key === "Backspace";
         const isFirstLetter = currentLetter === currentWord.firstChild;
@@ -192,14 +197,25 @@ class TypingGame {
             this.startTimer();
         }
 
+        // Case where user input is a letter
         if (isLetter) {
+
+            // If current letter exists then we know user is trying to match the expected letter
             if (currentLetter) {
+                // If the user typed the correct letter then mark that letter as correct, otherwise mark it incorrect
+                // Also Remove current class from the letter
                 this.addClass(currentLetter, key === expected ? "correct" : "incorrect");
                 this.removeClass(currentLetter, "current");
+
+                // If the currentLetter is not the last one in a word then mark the next letter as the current letter
                 if (currentLetter.nextSibling) {
                     this.addClass(currentLetter.nextSibling, "current");
                 }
+
+            // If we do not have a current letter, then we know that the user is typing extra letters beyond the word
             } else {
+
+                // In this case we will tack those letters on to the end of the current word
                 const incorrectLetter = document.createElement("span");
                 incorrectLetter.innerHTML = key;
                 incorrectLetter.className = "letter incorrect extra";
@@ -207,10 +223,16 @@ class TypingGame {
             }
         }
 
+        // Case where user input is a space
         if (isSpace) {
+            
+            // Do not let user input a space if at the first letter
             if (isFirstLetter) {
                 return;
             }
+
+            // If the expected letter is not a space and the user enters a space then invalidate the entire word
+            // and move the current word to the next word and the current letter to the beginning of the next word
             if (expected !== " ") {
                 [...document.querySelectorAll(".word.current .letter:not(.correct)")].forEach(letter => {
                     this.addClass(letter, "incorrect");
@@ -224,23 +246,28 @@ class TypingGame {
             this.addClass(currentWord.nextSibling.firstChild, "current");
         }
 
+        // Case where user input is a backspace
         if (isBackSpace) {
+
+            // Do not let user input a backspace if at the first letter
             if (isFirstLetter) {
                 return;
             }
-            else if (currentLetter && isFirstLetter) {
-                this.removeClass(currentWord, "current");
-                this.addClass(currentWord.previousSibling, "current");
-                this.removeClass(currentLetter, "current");
-                this.addClass(currentWord.previousSibling.lastChild, "current");
-                this.removeClass(currentWord.previousSibling.lastChild, "incorrect");
-                this.removeClass(currentWord.previousSibling.lastChild, "correct");
-            } else if (currentLetter && !isFirstLetter) {
+            
+            // This is the common case
+            // If we are not expecting a space and we are not the first letter
+            // then we want to unmark the last letter as being incorrect and 
+            // move the current letter to the previous letter
+            else if (currentLetter && !isFirstLetter) {
                 this.removeClass(currentLetter, "current");
                 this.addClass(currentLetter.previousSibling, "current");
                 this.removeClass(currentLetter.previousSibling, "incorrect");
                 this.removeClass(currentLetter.previousSibling, "correct");
-            } else {
+            } 
+            
+            // This is the case in which the user is trying to remove extra letters 
+            // that they tacked on manually. In this case we want to remove these letters.
+            else {
                 this.addClass(currentWord.lastChild, "current");
                 this.removeClass(currentWord.lastChild, "incorrect");
                 this.removeClass(currentWord.lastChild, "correct");
@@ -250,12 +277,14 @@ class TypingGame {
             }
         }
 
+        // Adjust words in view 
         if (currentWord.getBoundingClientRect().top > 250) {
             const words = document.getElementById("words");
             const margin = parseInt(words.style.marginTop || "0px");
             words.style.marginTop = (margin - 35) + "px";
         }
 
+        // Update cursor to follow current letter
         this.updateCursor();
     }
 
