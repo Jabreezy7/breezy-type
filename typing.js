@@ -5,7 +5,7 @@ window.addEventListener("load", function () {
 class TypingGame {
     constructor() {
         this.words = [];
-        this.gameTime = 15 * 1000;
+        this.gameTime = 30 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
@@ -114,6 +114,12 @@ class TypingGame {
 
     // Method to reset the UI and state for a new game
     resetGameUI() {
+        
+        // Once game ends we want to make sure that we restore any margins
+        // we imposed due to scrolling through the words
+        const wordsContainer = document.getElementById("words");
+        wordsContainer.style.marginTop = "0px";
+
         document.getElementById("info").innerHTML = this.gameTime / 1000;
         this.removeClass(document.getElementById("game"), "over");
         this.generateWords();
