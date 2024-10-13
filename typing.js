@@ -5,7 +5,7 @@ window.addEventListener("load", function () {
 class TypingGame {
     constructor() {
         this.words = [];
-        this.gameTime = 5 * 1000;
+        this.gameTime = 10 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
