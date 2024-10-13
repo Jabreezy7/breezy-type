@@ -7,6 +7,10 @@
     --accentColor: #fd4;
 }
 
+div {
+    user-select: none; /* Disables text selection */
+}
+
 
 body {
     font-family: "Roboto", sans-serif;
@@ -20,8 +24,10 @@ main {
     margin: 50px auto;
 }
 
+
 h1 {
     color: var(--accentColor);
+    user-select: none; /* Disables text selection */
 }
 
 h1 svg {
@@ -57,6 +63,16 @@ div#game {
     height: 105px;
     overflow: hidden;
     position: relative;
+}
+
+div:focus, input:focus{
+    outline:none;
+}
+
+#newGameButton{
+    outline:none;
+    font-family: 'Roboto Mono', monospace;
+    transform: translateX(-30px);
 }
 
 div #game:focus {
@@ -120,14 +136,9 @@ div.word {
     width: 2px;
     height: 1.6rem;
     background-color: var(--accentColor);
-    /* position: fixed;
-    top: 27%;
-    left: 10%;
-    transform: translate(-50%, -50%); */
     position: fixed;
     top: 193px;
-    left: 70px;
-    animation: blink 1s infinite;
+    animation: blink 1s infinite; 
     
 }
 
@@ -147,3 +158,4 @@ div.word {
 #game.over #focus-error{
     display: none;
 }
+
