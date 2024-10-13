@@ -2,7 +2,8 @@
 
 Welcome to the Breezy Type! This interactive web-based game helps users improve their typing speed and accuracy by challenging them to type a series of random words within a specified time limit. The game provides real-time feedback on performance and features a simple user interface.
 
-https://github.com/user-attachments/assets/506503c9-3b90-401a-ad6a-44dc5d8e74f8
+https://github.com/user-attachments/assets/01731a45-90a8-4192-b257-9d69e5983ce0
+
 
 ## Features
 
