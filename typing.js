@@ -1,4 +1,6 @@
-window.addEventListener("load", main);
+window.addEventListener("load", function() {
+    main();
+});
 
 class TypingGame {
     constructor() {
@@ -10,7 +12,7 @@ class TypingGame {
             "Orange", "Pencil", "Quilt", "Rain", "Snow", "Train", "Unicorn", "Volcano", "Window",
             "Yacht", "Zipper"
         ];
-        this.gameTime = 3 * 1000;
+        this.gameTime = 30 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
@@ -123,6 +125,7 @@ class TypingGame {
             // End the game when time runs out
             if (remainingTime <= 0) {
                 this.gameOver();
+                return;
             }
         }, 1000);
     }
