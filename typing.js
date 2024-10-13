@@ -10,7 +10,7 @@ class TypingGame {
             "Orange", "Pencil", "Quilt", "Rain", "Snow", "Train", "Unicorn", "Volcano", "Window",
             "Yacht", "Zipper"
         ];
-        this.gameTime = 60 * 1000;
+        this.gameTime = 3 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
@@ -101,6 +101,7 @@ class TypingGame {
         // Reset the timer
         this.timer = null;
         this.startCursorUpdate();
+        document.getElementById("game").focus();
     }
 
     // Method to start a new game
@@ -133,6 +134,8 @@ class TypingGame {
         document.getElementById("info").innerHTML = `WPM: ${this.getWPM()}`;
         this.removeClass(document.querySelector(".word"), "current");
         this.removeClass(document.querySelector(".letter"), "current");
+        const cursor = document.getElementById("cursor");
+        cursor.style.animation = "none";
     }
 
     // Method to handle user typing input
