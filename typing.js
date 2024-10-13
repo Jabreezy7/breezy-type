@@ -8,7 +8,7 @@ const words = [
 ];
 
 // 30 Seconds
-const gameTime = 30;
+const gameTime = 3 * 1000;
 window.timer = null;
 window.gameStart = null;
 
@@ -30,6 +30,19 @@ function formatWord(word) {
     return `<div class = "word"><span class="letter">${word.split('').join('</span><span class="letter">')}</span></div>`;
 }
 
+function getWPM(){
+    const words = [...document.querySelectorAll(".word")];
+    const lastTypedWord = document.querySelector(".word.current");
+    const lastTypedWordIndex = words.indexOf(lastTypedWord);
+    const typedWords = words.slice(0, lastTypedWordIndex);
+    const correctWords = typedWords.filter(word => {
+        const letters = [...word.children];
+        const incorrectLetters = letters.filter(letter => letter.className.includes('incorrect'));
+        const correctLetters = letters.filter(letter => letter.className.includes('correct'));
+        return incorrectLetters.length === 0 && correctLetters.length === letters.length;
+    });
+    return (correctWords.length/ gameTime)* 60000;
+}
 
 function newGame() {
     document.getElementById("words").innerHTML = "";
@@ -38,12 +51,16 @@ function newGame() {
     }
     addClass(document.querySelector(".word"), "current");
     addClass(document.querySelector(".letter"), "current");
+    document.getElementById("info").innerHTML = gameTime / 1000;
     window.timer = null;
 }
 
 function gameOver(){
     clearInterval(window.timer);
+    addClass(document.getElementById("game"), "over");
+    document.getElementById("info").innerHTML = `WPM: ${getWPM()}`;
 }
+
 
 
 document.getElementById("game").addEventListener("keydown", ev => {
@@ -60,6 +77,10 @@ document.getElementById("game").addEventListener("keydown", ev => {
     const isBackSpace = key === "Backspace";
     const isFirstLetter = currentLetter === currentWord.firstChild;
 
+    if(document.querySelector("#game.over")){
+        return;
+    }
+
     console.log({key, expected});
 
     if(!window.timer && isLetter){
@@ -69,9 +90,10 @@ document.getElementById("game").addEventListener("keydown", ev => {
             }
             const currentTime = (new Date()).getTime();
             const secPassed = Math.round((currentTime - window.gameStart)/1000);
-            const secLeft = gameTime - secPassed;
+            const secLeft = (gameTime/1000) - secPassed;
             if(secLeft <= 0){
                 gameOver();
+                return
             }
 
             document.getElementById("info").innerHTML = secLeft;
@@ -154,6 +176,11 @@ document.getElementById("game").addEventListener("keydown", ev => {
     const cursor = document.getElementById("cursor");
     cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 'px';
     cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left': 'right'] + 'px';
+
+    document.getElementById("newGameButton").addEventListener("click", () => {
+        gameOver();
+        newGame();
+    })
 
 })
 

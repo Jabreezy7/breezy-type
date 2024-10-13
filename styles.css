@@ -134,3 +134,16 @@ div.word {
 #game:focus #cursor {
     display: block;
 }
+
+#game.over #words{
+    opacity: .5;
+    filter: blur(0px);
+}
+
+#games.over:focus #cursor{
+    display: none;
+}
+
+#game.over #focus-error{
+    display: none;
+}
