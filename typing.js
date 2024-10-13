@@ -1,16 +1,15 @@
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
     main();
 });
 
 class TypingGame {
     constructor() {
         this.words = [];
-        this.gameTime = 30 * 1000;
+        this.gameTime = 3 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
         this.loadWords();
-        //this.newGame();
     }
 
     // Load words from the JSON file
@@ -61,20 +60,41 @@ class TypingGame {
         return `<div class="word"><span class="letter">${word.split('').join('</span><span class="letter">')}</span></div>`;
     }
 
-    // Method to calculate WPM
-    getWPM() {
+
+    // Method to calculate WPM and accuracy
+    getWPMandAccuracy() {
         const words = [...document.querySelectorAll(".word")];
         const lastTypedWord = document.querySelector(".word.current");
         const lastTypedWordIndex = words.indexOf(lastTypedWord);
         const typedWords = words.slice(0, lastTypedWordIndex);
-        const correctWords = typedWords.filter(word => {
+
+        let totalCorrectLetters = 0;
+        let totalTypedLetters = 0;
+        let correctWords = 0;
+
+        typedWords.forEach(word => {
             const letters = [...word.children];
-            const incorrectLetters = letters.filter(letter => letter.classList.contains('incorrect'));
             const correctLetters = letters.filter(letter => letter.classList.contains('correct'));
-            return incorrectLetters.length === 0 && correctLetters.length === letters.length;
+            const incorrectLetters = letters.filter(letter => letter.classList.contains('incorrect'));
+            totalCorrectLetters += correctLetters.length;
+            totalTypedLetters += letters.length;
+
+            // A word is correct if all letters are correct
+            if (incorrectLetters.length === 0 && correctLetters.length === letters.length) {
+                correctWords++;
+            }
         });
-        return (correctWords.length / (this.gameTime / 1000)) * 60;
+
+        // Calculate WPM
+        const wpm = (correctWords / (this.gameTime / 1000)) * 60;
+
+        // Calculate Accuracy
+        const accuracy = totalTypedLetters > 0 ? (totalCorrectLetters / totalTypedLetters) * 100 : 0;
+
+        // Returning accuracy as a percentage with two decimal places
+        return { wpm, accuracy: accuracy.toFixed(1) };
     }
+
 
     // Method to generate and display words for the typing game
     generateWords() {
@@ -143,7 +163,8 @@ class TypingGame {
     gameOver() {
         clearInterval(this.timer);
         this.addClass(document.getElementById("game"), "over");
-        document.getElementById("info").innerHTML = `WPM: ${this.getWPM()}`;
+        const stats = this.getWPMandAccuracy();
+        document.getElementById("info").innerHTML = `WPM: ${stats.wpm} Accuracy: ${stats.accuracy}%`;
         this.removeClass(document.querySelector(".word"), "current");
         this.removeClass(document.querySelector(".letter"), "current");
         const cursor = document.getElementById("cursor");
@@ -187,10 +208,9 @@ class TypingGame {
         }
 
         if (isSpace) {
-            if(isFirstLetter)
-                {
-                    return;
-                }
+            if (isFirstLetter) {
+                return;
+            }
             if (expected !== " ") {
                 [...document.querySelectorAll(".word.current .letter:not(.correct)")].forEach(letter => {
                     this.addClass(letter, "incorrect");
@@ -205,7 +225,7 @@ class TypingGame {
         }
 
         if (isBackSpace) {
-            if(isFirstLetter){
+            if (isFirstLetter) {
                 return;
             }
             else if (currentLetter && isFirstLetter) {
@@ -220,14 +240,13 @@ class TypingGame {
                 this.addClass(currentLetter.previousSibling, "current");
                 this.removeClass(currentLetter.previousSibling, "incorrect");
                 this.removeClass(currentLetter.previousSibling, "correct");
-            }else {
+            } else {
                 this.addClass(currentWord.lastChild, "current");
                 this.removeClass(currentWord.lastChild, "incorrect");
                 this.removeClass(currentWord.lastChild, "correct");
-                if(currentWord.lastChild.classList.contains("extra"))
-                    {
-                        currentWord.lastChild.remove();
-                    }
+                if (currentWord.lastChild.classList.contains("extra")) {
+                    currentWord.lastChild.remove();
+                }
             }
         }
 
@@ -250,6 +269,6 @@ class TypingGame {
 }
 
 // Instantiate the typing game class to start the game
-function main(){
+function main() {
     const game = new TypingGame();
 }

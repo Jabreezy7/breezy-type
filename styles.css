@@ -35,25 +35,34 @@ h1 svg {
     fill: var(--accentColor);
 }
 
-#header {
+/* #header {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin: 20px 6px 30px;
+} */
+#header {
+    display: flex;
+    justify-content: space-between; /* Space out elements */
+    align-items: center; /* Align elements vertically in the center */
+    padding:15 5px;
 }
 
 #buttons {
     text-align: right;
+    width: 150px;
+    transform: translateX(-20px);
 }
 
 #info {
     color: var(--accentColor);
+    font-family: 'Roboto Mono', monospace;
 }
 
 button {
     background: rgba(255, 255, 255, .2);
     border: 0;
     color: rgba(255, 255, 255, .5);
-    padding: 5px 20px;
+    padding: 6px 15px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -72,7 +81,6 @@ div:focus, input:focus{
 #newGameButton{
     outline:none;
     font-family: 'Roboto Mono', monospace;
-    transform: translateX(-30px);
 }
 
 div #game:focus {
