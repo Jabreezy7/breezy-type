@@ -10,7 +10,7 @@ class TypingGame {
             "Orange", "Pencil", "Quilt", "Rain", "Snow", "Train", "Unicorn", "Volcano", "Window",
             "Yacht", "Zipper"
         ];
-        this.gameTime = 5 * 1000;
+        this.gameTime = 60 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
@@ -74,6 +74,13 @@ class TypingGame {
         document.getElementById("words").innerHTML = wordsHTML;
     }
 
+    // Method to start the cursor position update
+    startCursorUpdate() {
+        this.cursorUpdateInterval = setInterval(() => {
+            this.updateCursor(); // Call the updateCursor function
+        }, 100); // Update every 100 milliseconds
+    }
+
     // Method to reset the UI and state for a new game
     resetGameUI() {
         document.getElementById("info").innerHTML = this.gameTime / 1000;
@@ -93,6 +100,7 @@ class TypingGame {
 
         // Reset the timer
         this.timer = null;
+        this.startCursorUpdate();
     }
 
     // Method to start a new game

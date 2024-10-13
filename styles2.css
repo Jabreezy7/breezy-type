@@ -1,0 +1,21 @@
+* {
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Full viewport height */
+    background-color: #333; /* Background color */
+    position: relative; /* Allow absolute positioning of the line */
+}
+
+#verticalLine {
+    width: 2px; /* Width of the vertical line */
+    height: 50px; /* Height of the vertical line */
+    background-color: #fd4; /* Line color */
+    position: absolute; /* Position it absolutely within the body */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position to center */
+}

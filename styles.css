@@ -138,8 +138,7 @@ div.word {
     background-color: var(--accentColor);
     position: fixed;
     top: 193px;
-    animation: blink 1s infinite; 
-    
+    animation: blink 1s infinite;   
 }
 
 #game:focus #cursor {
@@ -158,4 +157,6 @@ div.word {
 #game.over #focus-error{
     display: none;
 }
+
+
 
