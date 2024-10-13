@@ -41,11 +41,13 @@ document.getElementById("game").addEventListener("keydown", ev => {
     const currentWord = document.querySelector(".word.current");
     // If there is no current letter then we know that we are on a space
     const expected = currentLetter?.innerHTML || " ";
-    
+
     // Checking if key is a letter and not backspace or space key
     const isLetter = key.length === 1 && key !== " ";
 
     const isSpace = key === " ";
+    const isBackSpace = key === "Backspace";
+    const isFirstLetter = currentLetter === currentWord.firstChild;
 
     console.log({key, expected});
 
@@ -84,7 +86,32 @@ document.getElementById("game").addEventListener("keydown", ev => {
         addClass(currentWord.nextSibling.firstChild, "current");
     }
 
-    //Move cursor
+    if(isBackSpace){
+        if(currentLetter && isFirstLetter){
+            // Make prev word current, last letter current
+            removeClass(currentWord, "current");
+            addClass(currentWord.previousSibling, "current");
+            removeClass(currentLetter, "current");
+            addClass(currentWord.previousSibling.lastChild, "current");
+            removeClass(currentWord.previousSibling.lastChild, "incorrect");
+            removeClass(currentWord.previousSibling.lastChild, "correct");
+        }
+
+        if(currentLetter && !isFirstLetter){
+            removeClass(currentLetter, "current");
+            addClass(currentLetter.previousSibling, "current");
+            removeClass(currentLetter.previousSibling, "incorrect");
+            removeClass(currentLetter.previousSibling, "correct");
+        }
+
+        if(!currentLetter){
+            addClass(currentWord.lastChild, "current");
+            removeClass(currentWord.lastChild, "incorrect");
+            removeClass(currentWord.lastChild, "correct");
+        }
+    }
+
+    //Move Cursor
     const nextLetter = document.querySelector(".letter.current");
     const nextWord = document.querySelector(".word.current");
     const cursor = document.getElementById("cursor");
