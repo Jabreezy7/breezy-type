@@ -4,19 +4,28 @@ window.addEventListener("load", function() {
 
 class TypingGame {
     constructor() {
-        this.words = [
-            "Apple", "Banana", "Cat", "Dog", "Elephant", "Flower", "Garden", "House", "Ice", "Jump",
-            "Kite", "Lemon", "Monkey", "Night", "Ocean", "Pizza", "Queen", "River", "Sun", "Tree",
-            "Umbrella", "Violet", "Water", "Xylophone", "Yellow", "Zebra", "Ball", "Cloud", "Desk",
-            "Egg", "Fish", "Grass", "Hat", "Island", "Jacket", "King", "Light", "Mountain", "Nest",
-            "Orange", "Pencil", "Quilt", "Rain", "Snow", "Train", "Unicorn", "Volcano", "Window",
-            "Yacht", "Zipper"
-        ];
+        this.words = [];
         this.gameTime = 30 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
-        this.newGame();
+        this.loadWords();
+        //this.newGame();
+    }
+
+    // Load words from the JSON file
+    async loadWords() {
+        try {
+            const response = await fetch('common.json');
+            if (!response.ok) {
+                throw new Error('Failed to load words.');
+            }
+            const data = await response.json();
+            this.words = data.commonWords;
+            this.newGame();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     // Set up event listeners for user key input and start new game request
