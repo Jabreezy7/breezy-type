@@ -7,6 +7,12 @@ const words = [
     "Yacht", "Zipper"
 ];
 
+// 30 Seconds
+const gameTime = 30;
+window.timer = null;
+window.gameStart = null;
+
+
 function addClass(el, name) {
     el.className += ' ' + name;
 }
@@ -32,6 +38,11 @@ function newGame() {
     }
     addClass(document.querySelector(".word"), "current");
     addClass(document.querySelector(".letter"), "current");
+    window.timer = null;
+}
+
+function gameOver(){
+    clearInterval(window.timer);
 }
 
 
@@ -51,6 +62,25 @@ document.getElementById("game").addEventListener("keydown", ev => {
 
     console.log({key, expected});
 
+    if(!window.timer && isLetter){
+        window.timer = setInterval( ()=> {
+            if(!window.gameStart){
+                window.gameStart = (new Date()).getTime();
+            }
+            const currentTime = (new Date()).getTime();
+            const secPassed = Math.round((currentTime - window.gameStart)/1000);
+            const secLeft = gameTime - secPassed;
+            if(secLeft <= 0){
+                gameOver();
+            }
+
+            document.getElementById("info").innerHTML = secLeft;
+            
+        }, 1000);
+        
+    }
+
+    
     if(isLetter){
         if(currentLetter){
             addClass(currentLetter, key === expected ? "correct": "incorrect");
@@ -111,7 +141,14 @@ document.getElementById("game").addEventListener("keydown", ev => {
         }
     }
 
-    //Move Cursor
+    // Move Lines and Words
+    if(currentWord.getBoundingClientRect().top > 250){
+        const words = document.getElementById("words");
+        const margin = parseInt(words.style.marginTop || "0px");
+        words.style.marginTop = (margin - 35) + "px";
+    }
+
+    // Move Cursor
     const nextLetter = document.querySelector(".letter.current");
     const nextWord = document.querySelector(".word.current");
     const cursor = document.getElementById("cursor");
