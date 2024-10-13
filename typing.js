@@ -1,3 +1,5 @@
+window.addEventListener("load", main);
+
 class TypingGame {
     constructor() {
         this.words = [
@@ -8,7 +10,7 @@ class TypingGame {
             "Orange", "Pencil", "Quilt", "Rain", "Snow", "Train", "Unicorn", "Volcano", "Window",
             "Yacht", "Zipper"
         ];
-        this.gameTime = 15 * 1000;
+        this.gameTime = 5 * 1000;
         this.timer = null;
         this.cursor = document.getElementById("cursor");
         this.setupListeners();
@@ -27,28 +29,28 @@ class TypingGame {
         document.getElementById("game").addEventListener("keydown", (ev) => this.handleKeydown(ev));
     }
 
-    // Function to add a class to an element
+    // Method to add a class to an element
     addClass(el, name) {
         el.classList.add(name);
     }
 
-    // Function to remove a class from an element
+    // Method to remove a class from an element
     removeClass(el, name) {
         el.classList.remove(name);
     }
 
-    // Function to select a random word from the words list
+    // Method to select a random word from the words list
     randomWord() {
         const randomIndex = Math.floor(Math.random() * this.words.length);
         return this.words[randomIndex].toLowerCase();
     }
 
-    // Function to format a word into HTML, wrapping each letter in its own span for key validation
+    // Method to format a word into HTML, wrapping each letter in its own span for key validation
     formatWord(word) {
         return `<div class="word"><span class="letter">${word.split('').join('</span><span class="letter">')}</span></div>`;
     }
 
-    // Function to calculate WPM
+    // Method to calculate WPM
     getWPM() {
         const words = [...document.querySelectorAll(".word")];
         const lastTypedWord = document.querySelector(".word.current");
@@ -63,7 +65,7 @@ class TypingGame {
         return (correctWords.length / (this.gameTime / 1000)) * 60;
     }
 
-    // Function to generate and display words for the typing game
+    // Method to generate and display words for the typing game
     generateWords() {
         let wordsHTML = '';
         for (let i = 0; i < 200; i++) {
@@ -72,44 +74,51 @@ class TypingGame {
         document.getElementById("words").innerHTML = wordsHTML;
     }
 
-    // Function to reset the UI and state for a new game
+    // Method to reset the UI and state for a new game
     resetGameUI() {
         document.getElementById("info").innerHTML = this.gameTime / 1000;
         this.removeClass(document.getElementById("game"), "over");
         this.generateWords();
+
+        // Set the first word as the current word and the first letter as the current letter
         this.addClass(document.querySelector(".word"), "current");
         this.addClass(document.querySelector(".letter"), "current");
 
+        // Reset the cursor position to the first word
         const firstLetter = document.querySelector(".letter.current");
         if (firstLetter) {
             this.cursor.style.top = `${firstLetter.getBoundingClientRect().top}px`;
             this.cursor.style.left = `${firstLetter.getBoundingClientRect().left}px`;
         }
-        // this.cursor.style.top = "191.516px";
-        // this.cursor.style.left = "72.5px";
+
+        // Reset the timer
         this.timer = null;
     }
 
-    // Function to start a new game
+    // Method to start a new game
     newGame() {
         this.resetGameUI();
     }
 
-    // Function to start the game timer
+    // Method to start the game timer
     startTimer() {
+
+        // Record start time
         this.gameStart = Date.now();
+
         this.timer = setInterval(() => {
             const elapsedTime = Date.now() - this.gameStart;
             const remainingTime = Math.max((this.gameTime - elapsedTime) / 1000, 0);
             document.getElementById("info").innerHTML = Math.ceil(remainingTime);
 
+            // End the game when time runs out
             if (remainingTime <= 0) {
                 this.gameOver();
             }
         }, 1000);
     }
 
-    // Function to end the game and display WPM
+    // Method to end the game and display WPM
     gameOver() {
         clearInterval(this.timer);
         this.addClass(document.getElementById("game"), "over");
@@ -118,7 +127,7 @@ class TypingGame {
         this.removeClass(document.querySelector(".letter"), "current");
     }
 
-    // Function to handle user typing input
+    // Method to handle user typing input
     handleKeydown(ev) {
         const key = ev.key;
         const currentLetter = document.querySelector(".letter.current");
@@ -129,10 +138,12 @@ class TypingGame {
         const isBackSpace = key === "Backspace";
         const isFirstLetter = currentLetter === currentWord.firstChild;
 
+        // Prevent typing if the game is over
         if (document.querySelector("#game.over")) {
             return;
         }
 
+        // Start the timer if it hasn't started yet
         if (!this.timer && isLetter) {
             this.startTimer();
         }
@@ -167,7 +178,10 @@ class TypingGame {
         }
 
         if (isBackSpace) {
-            if (currentLetter && isFirstLetter) {
+            if(isFirstLetter){
+                return;
+            }
+            else if (currentLetter && isFirstLetter) {
                 this.removeClass(currentWord, "current");
                 this.addClass(currentWord.previousSibling, "current");
                 this.removeClass(currentLetter, "current");
@@ -179,10 +193,14 @@ class TypingGame {
                 this.addClass(currentLetter.previousSibling, "current");
                 this.removeClass(currentLetter.previousSibling, "incorrect");
                 this.removeClass(currentLetter.previousSibling, "correct");
-            } else {
+            }else {
                 this.addClass(currentWord.lastChild, "current");
                 this.removeClass(currentWord.lastChild, "incorrect");
                 this.removeClass(currentWord.lastChild, "correct");
+                if(currentWord.lastChild.classList.contains("extra"))
+                    {
+                        currentWord.lastChild.remove();
+                    }
             }
         }
 
@@ -195,7 +213,7 @@ class TypingGame {
         this.updateCursor();
     }
 
-    // Function to update the cursor position to follow current letter or word
+    // Method to update the cursor position to follow current letter or word
     updateCursor() {
         const nextLetter = document.querySelector(".letter.current");
         const nextWord = document.querySelector(".word.current");
@@ -205,4 +223,6 @@ class TypingGame {
 }
 
 // Instantiate the typing game class to start the game
-const game = new TypingGame();
+function main(){
+    const game = new TypingGame();
+}
