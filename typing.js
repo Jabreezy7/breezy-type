@@ -187,6 +187,10 @@ class TypingGame {
         }
 
         if (isSpace) {
+            if(isFirstLetter)
+                {
+                    return;
+                }
             if (expected !== " ") {
                 [...document.querySelectorAll(".word.current .letter:not(.correct)")].forEach(letter => {
                     this.addClass(letter, "incorrect");
