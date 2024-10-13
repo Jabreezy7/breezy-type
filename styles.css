@@ -35,11 +35,6 @@ h1 svg {
     fill: var(--accentColor);
 }
 
-/* #header {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin: 20px 6px 30px;
-} */
 #header {
     display: flex;
     justify-content: space-between; /* Space out elements */
@@ -166,5 +161,8 @@ div.word {
     display: none;
 }
 
+body.hide-cursor, #buttons{
+    cursor: none !important;
+}
 
 

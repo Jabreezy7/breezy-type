@@ -2,6 +2,7 @@ window.addEventListener("load", function () {
     main();
 });
 
+
 class TypingGame {
     constructor() {
         this.words = [];
@@ -37,6 +38,21 @@ class TypingGame {
 
         // Listen for keydown events to handle typing
         document.getElementById("game").addEventListener("keydown", (ev) => this.handleKeydown(ev));
+
+        // Listen for when user inputs a letter and hide mouse cursor
+        document.addEventListener("keydown", function (event) {
+            // Check if the pressed key is a letter (a-z or A-Z)
+            if (/^[a-zA-Z]$/.test(event.key)) {
+                document.body.classList.add("hide-cursor");
+            }
+        });
+
+        // Listen for when user moves mouse and reveal mouse cursor
+        document.addEventListener("mousemove", function () {
+            document.body.classList.remove("hide-cursor");
+        });
+
+
     }
 
     // Method to add a class to an element
@@ -112,6 +128,15 @@ class TypingGame {
         }, 100); // Update every 100 milliseconds
     }
 
+    // Method to end the curor position update interval
+    endCursorUpdate() {
+        // Check if the interval exists before clearing it
+        if (this.cursorUpdateInterval) {
+            clearInterval(this.cursorUpdateInterval); // Clear the interval
+            this.cursorUpdateInterval = null; // Reset the interval ID
+        }
+    }
+
     // Method to reset the UI and state for a new game
     resetGameUI() {
         
@@ -159,6 +184,7 @@ class TypingGame {
 
             // End the game when time runs out
             if (remainingTime <= 0) {
+                this.endCursorUpdate();
                 this.gameOver();
                 return;
             }
@@ -177,8 +203,11 @@ class TypingGame {
         cursor.style.animation = "none";
     }
 
+
+
     // Method to handle user keyboard input
     handleKeydown(ev) {
+
         const key = ev.key;
         const currentLetter = document.querySelector(".letter.current");
         const currentWord = document.querySelector(".word.current");
